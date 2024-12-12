@@ -14,21 +14,22 @@ function App() {
 
     const [cart, setCart] = useState([])
 
-    function addToCart(item){
-        const productExists = cart.findIndex(product => product.id === item.id )
-        if (productExists >= 0){
-            const updatedCard = [...cart]
-            updatedCard[productExists].quantity++
-            setCart[updatedCard]
-        } else{
-        item.quantity= 1
-        setCart([...cart, item])
+    function addToCart(product) {
+        const productExists = cart.findIndex(p => p.id === product.id);
+        if (productExists >= 0) {
+            const newCart = [...cart];
+            newCart[productExists].quantity++;
+            setCart(newCart);
+        } else {
+            setCart([...cart, {...product, quantity: 1}]);
         }
     }
 
     return (
     <>         
-        <Header />
+        <Header 
+            cart = {cart}
+        />
 
     <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
