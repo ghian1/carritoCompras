@@ -4,13 +4,19 @@ import Product from "./components/Product"
 import { db } from "./data/db"
 
 function App() {
-  
+    
+    const MAX_ITEMS = 5
+    const MIN_ITEMS = 1
     //State
     const [products, setProducts] = useState([])
 
     useEffect(() => {
         setProducts(db)
     }, [])
+
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart))
+    })
 
     const [cart, setCart] = useState([])
 
@@ -23,12 +29,45 @@ function App() {
         } else {
             setCart([...cart, {...product, quantity: 1}]);
         }
+    }    
+    function removeFromCart (id) {
+        setCart(prevCart => prevCart.filter(product => product.id !== id))
     }
-
+    function increaseQuantity(id){
+        const updatedCart = cart.map(item => {
+            if (item.id === id && item.quantity < MAX_ITEMS){
+             return {
+                ...item,
+                quantity: item.quantity + 1
+             }
+            }
+            return item
+        })
+        setCart(updatedCart)
+    }
+    function decreaseQuantity(id){
+        const updatedCart = cart.map(item => {
+            if (item.id === id && item.quantity > MIN_ITEMS){
+             return {
+                ...item,
+                quantity: item.quantity - 1
+             }   
+            }
+            return item
+        })
+        setCart(updatedCart)
+    }
+    function clearCart(){
+        setCart([])
+    }
     return (
     <>         
         <Header 
             cart = {cart}
+            removeFromCart = {removeFromCart}
+            increaseQuantity= {increaseQuantity}
+            decreaseQuantity= {decreaseQuantity}
+            clearCart= {clearCart}
         />
 
     <main className="container-xl mt-5">
